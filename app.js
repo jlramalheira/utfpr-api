@@ -19,6 +19,14 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 configureRoutes(app)
 
+app.get('/sync',async (req,res) => {
+  const Categorias = require('./models/categorias')
+  const Produtos = require('./models/produtos')
+  await Categorias.sync()
+  await Produtos.sync()
+  res.json({status: 'OK'})
+})
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));

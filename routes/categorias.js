@@ -1,21 +1,28 @@
 const express = require('express');
 const router = express.Router();
+const Categorias = require('../models/categorias')
 
-router.get('/:id/produtos/:idProduto', async (req, res) => {
-  const params = req.params
-  console.log('GET Categorias', params.id)
-  console.log('GET Produtos', params.idProduto)
-  //chamar meu banco de dados
-  //aplicar minha regra de nogócio
-  res.send({id: params.id, idProduto: params.idProduto})
+router.get('/', async (req, res) => {
+  const query = req.query
+  const categorias = await Categorias.findAll({where: query, include: ['produtos']})
+  res.json(categorias)
 })
 
-router.post('/:id/produtos', async (req, res) => {
-  const params = req.params
-  const body = req.body
-  //chamar meu banco de dados
-  //aplicar minha regra de nogócio
-  res.send({...body, categoriaId: params.id})
+router.post('/', async (req, res) => {
+  const categoria = req.body;
+  res.json(await Categorias.create(categoria))
 })
+
+router.put('/:id', async (req, res) => {
+  const categoria = req.body;
+  const id = req.params.id
+  res.json(await Categorias.update(categoria,{where: {id: id}}))
+})
+
+router.delete('/:id', async (req, res) => {
+  const id = req.params.id
+  res.json(await Categorias.destroy({where: {id: id}}))
+})
+
 
 module.exports = router;
