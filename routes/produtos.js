@@ -3,7 +3,8 @@ const router = express.Router();
 const Produtos = require('../models/produtos')
 
 router.get('/', async (req, res) => {
-  const produtos = await Produtos.findAll({include: ['categoria']})
+  const query = req.query
+  const produtos = await Produtos.findAll({where: query,include: ['categoria']})
   res.json(produtos)
 })
 
